@@ -9,30 +9,25 @@ import {
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 
-export default function MaterialUIPickers() {
+export default function MaterialUIPickers({onChange,value}) {
   // The first commit of Material-UI
-  const [selectedDate, setSelectedDate] = React.useState(new Date('2014-08-18T21:11:54'));
-
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
-
+  
   return (
     
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
     <Grid container justify="space-around">
       <KeyboardDatePicker
-        style={{ border: "1px solid black" }}
+        style={{ border: "1px solid gray",borderRadius:"5px" }}
         variant="inline"
-        format="MM/dd/yyyy"
+        format="dd/MM/yyyy"
         margin="normal"
         id="date-picker-inline"
-        label="Date picker inline"
-        value={selectedDate}
-        onChange={handleDateChange}
+        value={value}
+        onChange={onChange}
         KeyboardButtonProps={{
           "aria-label": "change date"
         }}
+       
       />
     </Grid>
   </MuiPickersUtilsProvider>

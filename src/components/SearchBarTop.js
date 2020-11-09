@@ -44,7 +44,7 @@ function getNames(array){
 function SearchBarTop(props){
   const apps = [];
      review.forEach( element => apps.push(element.appID) )
-     console.log(apps)
+     
 
     return(
             <Container >

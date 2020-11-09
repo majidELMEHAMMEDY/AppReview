@@ -10,6 +10,7 @@ import React from 'react';
 // imports
 import IconButton from "@material-ui/core/IconButton";
 import InputAdornment from "@material-ui/core/InputAdornment";
+import Link from "@material-ui/core/Link"
 import TextField from "@material-ui/core/TextField"
 import SearchIcon from "@material-ui/icons/Search";
 import Icon from '@material-ui/core/Icon'
@@ -88,7 +89,7 @@ const currencies = [
   }));
 
 
-function Search({onClickRating}){
+function Search({onClickVersion,onChangeSearch,onClickRating,onChangeDate,Datevalue}){
     const classes = useStyles();
     const [currency, setCurrency] = React.useState('Search');
     
@@ -101,6 +102,7 @@ function Search({onClickRating}){
        <Body>
             <Item>
             <TextField
+                    onChange={onChangeSearch}
                     placeholder="Search"
                     variant="outlined"
                     size="small"
@@ -120,16 +122,9 @@ function Search({onClickRating}){
 
             </Item>
             <Item>
-            <TextField
+            
+                            <MaterialUIPickers onChange={onChangeDate} value={Datevalue} />
                         
-                        fullWidth
-                        select
-                        size="small"
-                        variant="outlined"
-                        placeholder="all times"
-                        >
-                            <MaterialUIPickers />
-                        </TextField>
             </Item>
            
             <Typography component="legend" style={{marginTop:"4px"}} >Filter by Rating</Typography>
@@ -137,8 +132,10 @@ function Search({onClickRating}){
             
                 <Stars>
                    
-                       
-                        <Rating name="read-only" value="5"  onClick={onClickRating} size="small"/>
+                        <Link onClick={onClickRating} value={5}>
+                           <Rating name="pris" value="5" readOnly  size="small" />
+                        </Link>
+                        
                         <Rating name="read-only" value="4" readOnly size="small" />
                         <Rating name="read-only" value="3" readOnly size="small" />
                         <Rating name="read-only" value="2" readOnly size="small" />
@@ -149,7 +146,7 @@ function Search({onClickRating}){
 
                 </Mbox>
                 <Mbox>
-                    <Number>129</Number>
+                    <Number >129</Number>
                     <Number>12</Number>
                     <Number>4</Number>
                     <Number>2</Number>
@@ -160,10 +157,10 @@ function Search({onClickRating}){
             <Item>
             
                 <Stars>
-                <Typography component="legend"  style={{marginTop:"2px",fontSize:"13px"}}>1.2.0</Typography>
-                <Typography component="legend"  style={{marginTop:"2px",fontSize:"13px"}}>1.1.4</Typography>
-                <Typography component="legend"  style={{marginTop:"2px",fontSize:"13px"}}>1.1.0</Typography>
-                <Typography component="legend"  style={{marginTop:"2px",fontSize:"13px"}}>1.0</Typography>
+                <Typography onClick={onClickVersion = "1.2.0"} component="legend"  style={{marginTop:"2px",fontSize:"13px",cursor:"pointer"}}>1.2.0</Typography>
+                <Typography onClick={onClickVersion} component="legend"  style={{marginTop:"2px",fontSize:"13px", cursor:"pointer"}}>1.1.4</Typography>
+                <Typography onClick={onClickVersion} component="legend"  style={{marginTop:"2px",fontSize:"13px",cursor:"pointer"}}>1.1.0</Typography>
+                <Typography onClick={onClickVersion} component="legend"  style={{marginTop:"2px",fontSize:"13px",cursor:"pointer"}}>1.0</Typography>
                 
                 </Stars>
                 <Mbox>

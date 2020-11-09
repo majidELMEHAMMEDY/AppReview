@@ -39,7 +39,7 @@ const Title = styled.p`
 
 var i;
 function DropDown(props){
-    console.log(props.Options)
+    
     const {Options =[]} = props;
     return(
             <Container >
