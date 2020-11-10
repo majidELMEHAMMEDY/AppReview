@@ -17,9 +17,9 @@ export default function MaterialUIPickers({onChange,value}) {
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
     <Grid container justify="space-around">
       <KeyboardDatePicker
-        style={{ border: "1px solid gray",borderRadius:"5px" }}
+        style={{ border: "1px solid gray",borderRadius:"5px",margin:"0px", }}
         variant="inline"
-        format="dd/MM/yyyy"
+        format="dd/mm/yyyy"
         margin="normal"
         id="date-picker-inline"
         value={value}

@@ -8,6 +8,7 @@ import Grid from '@material-ui/core/Grid';
 import Pagination from '@material-ui/lab/Pagination';
 
 import review from './data/review.json';
+import { format } from 'date-fns';
 
 
 const CardItem = styled.div`
@@ -24,7 +25,7 @@ function App() {
  // const [Version, setVersion] = useState(0);
   const [Searchbar, setSearchbar] = useState('');
   const [Rating, setRating] = useState(0);
-  const [selectedDate, setSelectedDate] = useState();
+  const [selectedDate, setSelectedDate] = useState(null);
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -50,17 +51,39 @@ function App() {
   const lowercasedFilter = Searchbar.toLowerCase();
   let currentPosts =[];
 
+  //Date functions
+  const getDateWithNoTime = (date) => {
+      return date.split(' ')[0].concat(' ').concat(date.split(' ')[1]).concat(' ').concat(date.split(' ')[2]);
+  }
+
+  const ReFormDate = (DateEntred) =>{
+    //var DateEntred = new Date(date);
+    var month = DateEntred.toLocaleString('default', { month: 'short' });
+    //var MM = month.toLocaleString('en-us', { month: 'short' });
+    var day = DateEntred.getDate();
+    var year = DateEntred .getFullYear();
+    return day + " " +month + " " + year;
+  }
+
+
   const handleChange = (event, value) => {
     setCurrentPage(value)
   };
 
  let filterPosts = posts.filter(
     (rev) => {
-      if(Rating === 0){
-        return rev.appID === SelectedProduct &&  (rev.countryName.toLowerCase().indexOf(Searchbar.toLowerCase()) !== -1 || rev.reviewUserName.toLowerCase().indexOf(Searchbar.toLowerCase()) !== -1); 
+     
+      if(selectedDate !== null ){
+        
+        if(Rating==0){
+            return rev.appID === SelectedProduct &&  getDateWithNoTime(rev.reviewDate).localeCompare(getDateWithNoTime(ReFormDate(selectedDate)))==0 &&(rev.countryName.toLowerCase().indexOf(Searchbar.toLowerCase()) !== -1 || rev.reviewUserName.toLowerCase().indexOf(Searchbar.toLowerCase()) !== -1); 
+        }
+        return  rev.rating == Rating && rev.appID === SelectedProduct &&  getDateWithNoTime(rev.reviewDate).localeCompare(getDateWithNoTime(ReFormDate(selectedDate)))==0 &&(rev.countryName.toLowerCase().indexOf(Searchbar.toLowerCase()) !== -1 || rev.reviewUserName.toLowerCase().indexOf(Searchbar.toLowerCase()) !== -1); 
       }
-      return  rev.appID === SelectedProduct && rev.rating == Rating  && (rev.countryName.toLowerCase().indexOf(Searchbar.toLowerCase()) !== -1 || rev.reviewUserName.toLowerCase().indexOf(Searchbar.toLowerCase()) !== -1);
-      
+      if(Rating==0){
+        return  rev.appID === SelectedProduct &&  (rev.countryName.toLowerCase().indexOf(Searchbar.toLowerCase()) !== -1 || rev.reviewUserName.toLowerCase().indexOf(Searchbar.toLowerCase()) !== -1);
+      }
+      return rev.rating == Rating &&  rev.appID === SelectedProduct &&  (rev.countryName.toLowerCase().indexOf(Searchbar.toLowerCase()) !== -1 || rev.reviewUserName.toLowerCase().indexOf(Searchbar.toLowerCase()) !== -1);
     }
   )
   
@@ -82,13 +105,20 @@ if(SelectedProduct == '')
 {
    filterPosts = posts.filter(
     (rev) => {
-      if(Rating == 0){
+      if(selectedDate !== null ){
+        if(Rating==0){
+          return   getDateWithNoTime(rev.reviewDate).localeCompare(getDateWithNoTime(ReFormDate(selectedDate)))==0 &&(rev.countryName.toLowerCase().indexOf(Searchbar.toLowerCase()) !== -1 || rev.reviewUserName.toLowerCase().indexOf(Searchbar.toLowerCase()) !== -1); 
+        }
        
-        return  (rev.countryName.toLowerCase().indexOf(Searchbar.toLowerCase()) !== -1 || rev.reviewUserName.toLowerCase().indexOf(Searchbar.toLowerCase()) !== -1); 
+        return  rev.rating == Rating && getDateWithNoTime(rev.reviewDate).localeCompare(getDateWithNoTime(ReFormDate(selectedDate)))==0 &&(rev.countryName.toLowerCase().indexOf(Searchbar.toLowerCase()) !== -1 || rev.reviewUserName.toLowerCase().indexOf(Searchbar.toLowerCase()) !== -1); 
       }
-      return  rev.rating == Rating  && (rev.countryName.toLowerCase().indexOf(Searchbar.toLowerCase()) !== -1 || rev.reviewUserName.toLowerCase().indexOf(Searchbar.toLowerCase()) !== -1);
+      if(Rating== 0){
+         return (rev.countryName.toLowerCase().indexOf(Searchbar.toLowerCase()) !== -1 || rev.reviewUserName.toLowerCase().indexOf(Searchbar.toLowerCase()) !== -1);
+      }
+      return rev.rating == Rating && (rev.countryName.toLowerCase().indexOf(Searchbar.toLowerCase()) !== -1 || rev.reviewUserName.toLowerCase().indexOf(Searchbar.toLowerCase()) !== -1);
       
     }
+   
   )
  
   SortedPosts = filterPosts.sort(function(a, b) {
@@ -103,9 +133,10 @@ if(SelectedProduct == '')
     
   })
 
- console.log(selectedDate)
+ 
 
   currentPosts = SortedPosts.slice(indexOfFirstPost, indexOfLastPost)
+  console.log(Rating)
 }
   return (
     <div className="App" >
@@ -125,7 +156,7 @@ if(SelectedProduct == '')
         <Grid container spacing={2} >
           <Grid item xs={12} sm={3}>
               <Grid container direction="column" style={{padding:"25px",borderRight:"1px solid #dbdbdb",margin:"0px" }}>
-                  <Search  onChangeSearch={(e) => setSearchbar(e.target.value)} onClickRating={(e) => setRating(e.target.value)} onChangeDate={handleDateChange} Datevalue={selectedDate}/>
+                  <Search  onChangeSearch={(e) => setSearchbar(e.target.value)} onClickRating={(e) => setRating(e.currentTarget.dataset.id)} onChangeDate={date => setSelectedDate(date)} Datevalue={selectedDate}/>
               </Grid>
           </Grid>
           

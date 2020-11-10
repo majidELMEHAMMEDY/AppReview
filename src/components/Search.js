@@ -3,6 +3,10 @@
 import { Container } from '@material-ui/core';
 import styled from 'styled-components';
 import { FaSearch } from "react-icons/fa";
+import DatePicker from "react-datepicker";
+//import DatePicker from 'react-date-picker';
+//
+import "react-datepicker/dist/react-datepicker.css"
 
 
 import React from 'react';
@@ -13,6 +17,7 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import Link from "@material-ui/core/Link"
 import TextField from "@material-ui/core/TextField"
 import SearchIcon from "@material-ui/icons/Search";
+import CalendarToday from "@material-ui/icons/CalendarToday"
 import Icon from '@material-ui/core/Icon'
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -123,23 +128,59 @@ function Search({onClickVersion,onChangeSearch,onClickRating,onChangeDate,Dateva
             </Item>
             <Item>
             
-                            <MaterialUIPickers onChange={onChangeDate} value={Datevalue} />
-                        
-            </Item>
+            <DatePicker 
+            selected={Datevalue} 
+            onChange={onChangeDate} 
+           
+            dateFormat="dd MMM yyyy " 
+            
+            isClearable
+            placeholderText="all Times"
+            customInput={<TextField
+                          onChange={onChangeSearch}
+                          placeholder="Search"
+                          variant="outlined"
+                          size="small"
+                          fullWidth
+                          InputProps={{
+                            startAdornment: (
+                            <InputAdornment position="start"> 
+                            <IconButton>
+                                <CalendarToday />
+                            </IconButton>
+                            </InputAdornment>
+                            
+                        )
+                        }}
+                      />}/>
+                     
+         </Item>
            
             <Typography component="legend" style={{marginTop:"4px"}} >Filter by Rating</Typography>
             <Item>
             
                 <Stars>
                    
-                        <Link onClick={onClickRating} value={5}>
-                           <Rating name="pris" value="5" readOnly  size="small" />
+                        <Link onClick={onClickRating} data-id="5" style={{cursor:"pointer"}}>
+                           <Rating name="pris" value="5" readOnly cursor="pointer" size="small" />
+                        </Link>
+                        <Link onClick={onClickRating} data-id="4" style={{cursor:"pointer"}}>
+                        <Rating name="read-only" value="4" readOnly size="small" />
+                        </Link>
+                        <Link onClick={onClickRating} data-id="3" style={{cursor:"pointer"}}>
+                        <Rating name="read-only" value="3" readOnly size="small" />
+                        </Link>
+                        <Link onClick={onClickRating} data-id="2" style={{cursor:"pointer"}}>
+                        <Rating name="read-only" value="2" readOnly size="small" />
+                        </Link>
+                        <Link onClick={onClickRating} data-id="1"style={{cursor:"pointer"}}>
+                        <Rating name="read-only" value="1" readOnly size="small" />
                         </Link>
                         
-                        <Rating name="read-only" value="4" readOnly size="small" />
-                        <Rating name="read-only" value="3" readOnly size="small" />
-                        <Rating name="read-only" value="2" readOnly size="small" />
-                        <Rating name="read-only" value="1" readOnly size="small" />
+                        
+                        
+                        
+                        
                    
                 </Stars>
                 <Mbox>
@@ -195,6 +236,7 @@ function Search({onClickVersion,onChangeSearch,onClickRating,onChangeDate,Dateva
                     
                 </Mbox>
             </Item>
+            
        </Body>
         
     )
