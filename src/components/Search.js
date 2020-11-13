@@ -12,8 +12,9 @@ import CalendarToday from "@material-ui/icons/CalendarToday"
 import { makeStyles } from '@material-ui/core/styles';
 import Rating from '@material-ui/lab/Rating';
 import Typography from '@material-ui/core/Typography';
-
 import ReactCountryFlag from "react-country-flag"
+
+import CustomizedProgressBars from "./CustomizedProgressBars"
 
 import "react-datepicker/dist/react-datepicker.css"
 import {Body, Item, Stars, Mbox, Number} from "../style"
@@ -43,6 +44,11 @@ function Search({onClickVersion,onChangeSearch,onClickRating,onChangeDate,Dateva
       {name:"United Kingdom", shortCut:"UK",svg:"GB"},
       {name:"Germany", shortCut:"Germany",svg:"DE"},
       {name:"Japan", shortCut:"Japan",svg:"JP"}]
+
+    const totalRating = starsCountArray.reduce((a, b) => a + b, 0);
+    const porsArray = starsCountArray.map(el => 
+            (el*100)/totalRating
+        )
 
     return(
        
@@ -110,6 +116,11 @@ function Search({onClickVersion,onChangeSearch,onClickRating,onChangeDate,Dateva
                       ))}
                 </Stars>
                 <Mbox>
+                        {porsArray.map(el =>(
+                            <CustomizedProgressBars value={el}/>
+                        ))}
+                        
+                        
                 </Mbox>
                 <Mbox>
                     {starsCountArray.map(el=>(

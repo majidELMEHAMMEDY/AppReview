@@ -1,9 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
 import Grid from '@material-ui/core/Grid';
@@ -11,7 +8,7 @@ import Icon from '@material-ui/core/Icon';
 import Rating from '@material-ui/lab/Rating';
 import Paper from '@material-ui/core/Paper';
 
-const useStyles = makeStyles({
+const CardStyle = makeStyles({
   root: {
     minWidth: 275,
     boxShadow:4
@@ -46,7 +43,7 @@ const useStyles = makeStyles({
 });
 
 export default function BodyCard({appStorName,countryname,rating,reviewtext,reviewdate,userName,version,reviewheading}) {
-  const classes = useStyles();
+  const classes = CardStyle();
   
 
   return (
@@ -54,7 +51,7 @@ export default function BodyCard({appStorName,countryname,rating,reviewtext,revi
        <Grid container direction="column" spacing={2}>
        <Grid item xs container   justify="flex-start" spacing={2}>
             <Grid item >
-                <Icon>inbox</Icon>
+                <Icon style={{color:"#9400D3", fontSize:"35px"}}>stop</Icon>
             </Grid>
             <Grid item   >
               <Paper className={classes.paper}>{appStorName}</Paper>

@@ -17,10 +17,8 @@ function App() {
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [Sorting, setSorting] = useState('Newest first');
-  const [Searchbar, setSearchbar] = useState(' ');
   const [postsPerPage,setPostPerPage] = useState(10);
   const [selectedDate,setSelectedDate] = useState(null);
-  const [version,setVersion] = useState(null);
   const [filters,setFilters] = useState(
     [
       {name:"appID",value: null},
@@ -43,9 +41,6 @@ function App() {
   const ratingPerStar=["5","4","3","2","1"].map(el=>
     posts.filter(f => f.rating == el).length
     )
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
 
   useEffect(()=> {
     const fetchPosts = async () => {
@@ -56,14 +51,14 @@ function App() {
   },[])
   
 
-  //Get current posts
+  
   
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   
-  const lowercasedFilter = Searchbar.toLowerCase();
+  
 
-  //Date functions
+  
   const getDateWithNoTime = (date) => {
       return date.split(' ')[0].concat(' ').concat(date.split(' ')[1]).concat(' ').concat(date.split(' ')[2]);
   }
@@ -117,7 +112,7 @@ function App() {
    
   const currentPosts = finalResult.slice(indexOfFirstPost, indexOfLastPost)
  
-//}
+
   return (
     <Grid className="App" >
       <Grid container direction="column" spacing={2} style={{paddingRight:"40px",paddingLeft:"40px"}} >
