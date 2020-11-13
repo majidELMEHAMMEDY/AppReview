@@ -1,85 +1,26 @@
 
 
-import { Container } from '@material-ui/core';
-import styled from 'styled-components';
-import { FaSearch } from "react-icons/fa";
-import DatePicker from "react-datepicker";
-//import DatePicker from 'react-date-picker';
-//
-import "react-datepicker/dist/react-datepicker.css"
-
 
 import React from 'react';
-
-// imports
+import DatePicker from "react-datepicker";
 import IconButton from "@material-ui/core/IconButton";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import Link from "@material-ui/core/Link"
 import TextField from "@material-ui/core/TextField"
 import SearchIcon from "@material-ui/icons/Search";
 import CalendarToday from "@material-ui/icons/CalendarToday"
-import Icon from '@material-ui/core/Icon'
 import { makeStyles } from '@material-ui/core/styles';
-
-
 import Rating from '@material-ui/lab/Rating';
 import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
 
-import MaterialUIPickers from "./DatePicker"
+import ReactCountryFlag from "react-country-flag"
+
+import "react-datepicker/dist/react-datepicker.css"
+import {Body, Item, Stars, Mbox, Number} from "../style"
 
 
-
-const Body = styled.div`
-    display:flex;
-    flex-direction: column;
-    width: 100%;
-    flex-flow: column nowrap;
-    z-index: 30;
-    
-`
-const Item = styled.div`
-    margin-bottom: 15px;
-    width:100%;
-    display: flex;
-    heighth:25%
-    
-   
-`
-const Stars = styled.div`
-    width:50%;
-`
-const Mbox = styled.div`
-    width:25%;
-    display:flex;
-    flex-direction: column;
-`
-const Number = styled.p`
-    font-size:13px;
-    margin:2px;
-    color:#dbdbdb;
-`
 
 // render
-
-const currencies = [
-    {
-      value: 'USD',
-      label: '$',
-    },
-    {
-      value: 'Search',
-      label: 'all times',
-    },
-    {
-      value: 'star',
-      label: '฿',
-    },
-    {
-      value: 'JPY',
-      label: '¥',
-    },
-  ];
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -94,14 +35,15 @@ const currencies = [
   }));
 
 
-function Search({onClickVersion,onChangeSearch,onClickRating,onChangeDate,Datevalue}){
-    const classes = useStyles();
-    const [currency, setCurrency] = React.useState('Search');
-    
-    const handleChange = (event) => {
-      setCurrency(event.target.value);
-    };
-    const iconName = "Search";
+function Search({onClickVersion,onChangeSearch,onClickRating,onChangeDate,Datevalue,onClickCountry,countryCountArray,filtersCountArray,starsCountArray}){
+    const RatingValues =[5,4,3,2,1]
+    const versionValues =["v1.2.1","V1.1","v1.1.0","v1.0"];
+    const countryList =[
+      {name:"United States", shortCut:"US",svg:"US"},
+      {name:"United Kingdom", shortCut:"UK",svg:"GB"},
+      {name:"Germany", shortCut:"Germany",svg:"DE"},
+      {name:"Japan", shortCut:"Japan",svg:"JP"}]
+
     return(
        
        <Body>
@@ -156,83 +98,78 @@ function Search({onClickVersion,onChangeSearch,onClickRating,onChangeDate,Dateva
                      
          </Item>
            
-            <Typography component="legend" style={{marginTop:"4px"}} >Filter by Rating</Typography>
+            <Typography component="legend" style={{marginTop:"4px",fontWeight:"bold"}} >Filter by Rating</Typography>
             <Item>
             
                 <Stars>
                    
-                        <Link onClick={onClickRating} data-id="5" style={{cursor:"pointer"}}>
-                           <Rating name="pris" value="5" readOnly cursor="pointer" size="small" />
-                        </Link>
-                        <Link onClick={onClickRating} data-id="4" style={{cursor:"pointer"}}>
-                        <Rating name="read-only" value="4" readOnly size="small" />
-                        </Link>
-                        <Link onClick={onClickRating} data-id="3" style={{cursor:"pointer"}}>
-                        <Rating name="read-only" value="3" readOnly size="small" />
-                        </Link>
-                        <Link onClick={onClickRating} data-id="2" style={{cursor:"pointer"}}>
-                        <Rating name="read-only" value="2" readOnly size="small" />
-                        </Link>
-                        <Link onClick={onClickRating} data-id="1"style={{cursor:"pointer"}}>
-                        <Rating name="read-only" value="1" readOnly size="small" />
-                        </Link>
-                        
-                        
-                        
-                        
-                        
+                      {RatingValues.map(element => (
+                          <Link onClick={()=>onClickRating(element)} data-id={element} style={{cursor:"pointer"}}>
+                                <Rating name="pris" value={element} readOnly cursor="pointer" size="small" />
+                          </Link>
+                      ))}
+                </Stars>
+                <Mbox>
+                </Mbox>
+                <Mbox>
+                    {starsCountArray.map(el=>(
+                             <Number >{el}</Number>
+                    ))}
                    
-                </Stars>
-                <Mbox>
-
-                </Mbox>
-                <Mbox>
-                    <Number >129</Number>
-                    <Number>12</Number>
-                    <Number>4</Number>
-                    <Number>2</Number>
-                    <Number>4</Number>
-                </Mbox>
-            </Item>
-            <Typography component="legend" style={{marginTop:"4px"}} >Filter by Version</Typography>
-            <Item>
-            
-                <Stars>
-                <Typography onClick={onClickVersion = "1.2.0"} component="legend"  style={{marginTop:"2px",fontSize:"13px",cursor:"pointer"}}>1.2.0</Typography>
-                <Typography onClick={onClickVersion} component="legend"  style={{marginTop:"2px",fontSize:"13px", cursor:"pointer"}}>1.1.4</Typography>
-                <Typography onClick={onClickVersion} component="legend"  style={{marginTop:"2px",fontSize:"13px",cursor:"pointer"}}>1.1.0</Typography>
-                <Typography onClick={onClickVersion} component="legend"  style={{marginTop:"2px",fontSize:"13px",cursor:"pointer"}}>1.0</Typography>
-                
-                </Stars>
-                <Mbox>
-
-                </Mbox>
-                <Mbox>
-                    <Number>129</Number>
-                    <Number>12</Number>
-                    <Number>4</Number>
-                    <Number>2</Number>
                     
                 </Mbox>
             </Item>
-            <Typography component="legend" style={{marginTop:"4px"}} >Filter by Country</Typography>
+            <Typography component="legend" style={{marginTop:"4px",fontWeight:"bold"}} >Filter by Version</Typography>
             <Item>
-            
                 <Stars>
-                <Typography component="legend"  style={{marginTop:"2px",fontSize:"13px"}}>United States</Typography>
-                <Typography component="legend"  style={{marginTop:"2px",fontSize:"13px"}}>United Kingdom</Typography>
-                <Typography component="legend"  style={{marginTop:"2px",fontSize:"13px"}}>Germany</Typography>
-                <Typography component="legend"  style={{marginTop:"2px",fontSize:"13px"}}>japan</Typography>
+                {versionValues.map(element => (
+                          <Link onClick={()=>onClickVersion(element)} style={{cursor:"pointer",textDecoration:"none",color:"black"}}>
+                                <Typography  component="legend"  style={{marginTop:"2px",fontSize:"13px",cursor:"pointer"}}>{element}</Typography>
+                          </Link>
+                      ))}
+                
                 
                 </Stars>
                 <Mbox>
 
                 </Mbox>
                 <Mbox>
-                    <Number>129</Number>
-                    <Number>12</Number>
-                    <Number>4</Number>
-                    <Number>2</Number>
+                   { filtersCountArray.map(el => (
+                        <Number>{el}</Number>
+                   ))}
+                    
+                    
+                    
+                </Mbox>
+            </Item>
+            <Typography component="legend" style={{marginTop:"4px",fontWeight:"bold"}} >Filter by Country</Typography>
+            <Item>
+            
+                <Stars >
+                {countryList.map(element => (
+                          <Link onClick={()=>onClickCountry(element.shortCut)} style={{cursor:"pointer",textDecoration:"none",color:"black",display:"flex"}}>
+                                <ReactCountryFlag
+                                    countryCode={element.svg}
+                                    svg
+                                    style={{
+                                        width: '1.5em',
+                                        height: '1.5em',
+                                    }}
+                                    title="US"
+                                    /> 
+            <Typography  component="legend"  style={{marginTop:"2px",fontSize:"13px",cursor:"pointer",marginLeft:"5px"}}>{element.name}</Typography>
+                          </Link>
+                      ))}
+                
+                
+                </Stars>
+                <Mbox>
+
+                </Mbox>
+                <Mbox>
+                { countryCountArray.map(el => (
+                        <Number>{el}</Number>
+                   ))}
                     
                 </Mbox>
             </Item>
@@ -243,12 +180,3 @@ function Search({onClickVersion,onChangeSearch,onClickRating,onChangeDate,Dateva
 }
 
 export default Search;
-
-
-/**
- * <Body>
-                <FaSearch/>
-                <Input type="text" placeholder="Search" />
-            </Body>
-        
- */

@@ -59,7 +59,7 @@ export default function BodyCard({appStorName,countryname,rating,reviewtext,revi
             <Grid item   >
               <Paper className={classes.paper}>{appStorName}</Paper>
             </Grid>
-            <Grid item >
+            <Grid item style={{fontWeight:"bold"}}>
               {reviewheading}
             </Grid>
             <Grid item   >

@@ -1,46 +1,59 @@
 import React, { useState, useEffect } from 'react';
-
-import styled from 'styled-components';
-import SearchBarTop from "./components/SearchBarTop"
-import Search from "./components/Search"
-import BodyCard from "./components/Card"
 import Grid from '@material-ui/core/Grid';
 import Pagination from '@material-ui/lab/Pagination';
 
+
+import SearchBarTop from "./components/SearchBarTop"
+import Search from "./components/Search"
+import BodyCard from "./components/Card"
 import review from './data/review.json';
-import { format } from 'date-fns';
+
+import {CardItem} from "./style"
 
 
-const CardItem = styled.div`
-  margin-bottom:10px;
-`
+
 
 function App() {
   const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage, setPostsPerPage] = useState(10);
-  const [SelectedProduct, setSelectedProduct] = useState('');
   const [Sorting, setSorting] = useState('Newest first');
- // const [Version, setVersion] = useState(0);
-  const [Searchbar, setSearchbar] = useState('');
-  const [Rating, setRating] = useState(0);
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [Searchbar, setSearchbar] = useState(' ');
+  const [postsPerPage,setPostPerPage] = useState(10);
+  const [selectedDate,setSelectedDate] = useState(null);
+  const [version,setVersion] = useState(null);
+  const [filters,setFilters] = useState(
+    [
+      {name:"appID",value: null},
+      {name:"rating", value :null},
+      {name:"version", value:null},
+      {name:"countryName", value:null},
+      {name:"reviewUserName",value:null}
+    ]
+  );
 
+  
+  
+  const ratingPerCountry=["US","UK","Germany","Japan"].map(el =>
+      posts.filter(f=> f.countryName == el).length
+  );
+  
+  const ratingPerVersion=["v1.2.1","V1.1","v1.1.0","v1.0"].map(el=>
+      posts.filter(f=> f.version == el).length
+    )
+  const ratingPerStar=["5","4","3","2","1"].map(el=>
+    posts.filter(f => f.rating == el).length
+    )
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
 
   useEffect(()=> {
     const fetchPosts = async () => {
-      setLoading(true);
       setPosts(review);
-      setLoading(false);
     }
-
     fetchPosts();
     
-  })
+  },[])
   
 
   //Get current posts
@@ -49,7 +62,6 @@ function App() {
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   
   const lowercasedFilter = Searchbar.toLowerCase();
-  let currentPosts =[];
 
   //Date functions
   const getDateWithNoTime = (date) => {
@@ -57,12 +69,9 @@ function App() {
   }
 
   const ReFormDate = (DateEntred) =>{
-    //var DateEntred = new Date(date);
-    var month = DateEntred.toLocaleString('default', { month: 'short' });
-    //var MM = month.toLocaleString('en-us', { month: 'short' });
-    var day = DateEntred.getDate();
-    var year = DateEntred .getFullYear();
-    return day + " " +month + " " + year;
+
+
+    return `${DateEntred.getDate()} ${DateEntred.toLocaleString('default', { month: 'short' })} ${DateEntred .getFullYear()}`;
   }
 
 
@@ -70,58 +79,8 @@ function App() {
     setCurrentPage(value)
   };
 
- let filterPosts = posts.filter(
-    (rev) => {
-     
-      if(selectedDate !== null ){
-        
-        if(Rating==0){
-            return rev.appID === SelectedProduct &&  getDateWithNoTime(rev.reviewDate).localeCompare(getDateWithNoTime(ReFormDate(selectedDate)))==0 &&(rev.countryName.toLowerCase().indexOf(Searchbar.toLowerCase()) !== -1 || rev.reviewUserName.toLowerCase().indexOf(Searchbar.toLowerCase()) !== -1); 
-        }
-        return  rev.rating == Rating && rev.appID === SelectedProduct &&  getDateWithNoTime(rev.reviewDate).localeCompare(getDateWithNoTime(ReFormDate(selectedDate)))==0 &&(rev.countryName.toLowerCase().indexOf(Searchbar.toLowerCase()) !== -1 || rev.reviewUserName.toLowerCase().indexOf(Searchbar.toLowerCase()) !== -1); 
-      }
-      if(Rating==0){
-        return  rev.appID === SelectedProduct &&  (rev.countryName.toLowerCase().indexOf(Searchbar.toLowerCase()) !== -1 || rev.reviewUserName.toLowerCase().indexOf(Searchbar.toLowerCase()) !== -1);
-      }
-      return rev.rating == Rating &&  rev.appID === SelectedProduct &&  (rev.countryName.toLowerCase().indexOf(Searchbar.toLowerCase()) !== -1 || rev.reviewUserName.toLowerCase().indexOf(Searchbar.toLowerCase()) !== -1);
-    }
-  )
-  
  
- let SortedPosts = filterPosts.sort(function(a, b) {
-  var dateA = new Date(a.reviewDate), dateB = new Date(b.reviewDate);
-  if(Sorting == 'Newest first')
-  {
-    return dateB - dateA;
-  }
-   else if(Sorting == 'Oldest first'){
-    return  dateA - dateB;
-  }
-  
-})
-currentPosts = SortedPosts.slice(indexOfFirstPost, indexOfLastPost)
-console.log(Rating)
-if(SelectedProduct == '')
-{
-   filterPosts = posts.filter(
-    (rev) => {
-      if(selectedDate !== null ){
-        if(Rating==0){
-          return   getDateWithNoTime(rev.reviewDate).localeCompare(getDateWithNoTime(ReFormDate(selectedDate)))==0 &&(rev.countryName.toLowerCase().indexOf(Searchbar.toLowerCase()) !== -1 || rev.reviewUserName.toLowerCase().indexOf(Searchbar.toLowerCase()) !== -1); 
-        }
-       
-        return  rev.rating == Rating && getDateWithNoTime(rev.reviewDate).localeCompare(getDateWithNoTime(ReFormDate(selectedDate)))==0 &&(rev.countryName.toLowerCase().indexOf(Searchbar.toLowerCase()) !== -1 || rev.reviewUserName.toLowerCase().indexOf(Searchbar.toLowerCase()) !== -1); 
-      }
-      if(Rating== 0){
-         return (rev.countryName.toLowerCase().indexOf(Searchbar.toLowerCase()) !== -1 || rev.reviewUserName.toLowerCase().indexOf(Searchbar.toLowerCase()) !== -1);
-      }
-      return rev.rating == Rating && (rev.countryName.toLowerCase().indexOf(Searchbar.toLowerCase()) !== -1 || rev.reviewUserName.toLowerCase().indexOf(Searchbar.toLowerCase()) !== -1);
-      
-    }
-   
-  )
- 
-  SortedPosts = filterPosts.sort(function(a, b) {
+ let SortedPosts = posts.sort(function(a, b) {
     var dateA = new Date(a.reviewDate), dateB = new Date(b.reviewDate);
     if(Sorting == 'Newest first')
     {
@@ -132,31 +91,115 @@ if(SelectedProduct == '')
     }
     
   })
-
+   
+  let finalResult=[];
+  let filtredData =[];
+  let filterDate=[];
+   if(selectedDate!== null){
+           filterDate = SortedPosts.filter( (rev) =>{
+          return getDateWithNoTime(rev.reviewDate).localeCompare(getDateWithNoTime(ReFormDate(selectedDate)))==0 
+          }
+        )
+       
+         filtredData = filterDate.filter(p=> filters.filter(f=>f.value).every(e =>p[e.name] == e.value) );
+        
+        finalResult = filtredData.length ? filtredData : filterDate ;
+        
+   }
+   else{
+    
+    filtredData = SortedPosts.filter(p=> filters.filter(f=>f.value).every(e =>p[e.name] == e.value) );
+  
+    finalResult = filtredData.length ? filtredData : SortedPosts ;
+   }
+  
  
-
-  currentPosts = SortedPosts.slice(indexOfFirstPost, indexOfLastPost)
-  console.log(Rating)
-}
+   
+  const currentPosts = finalResult.slice(indexOfFirstPost, indexOfLastPost)
+ 
+//}
   return (
-    <div className="App" >
+    <Grid className="App" >
       <Grid container direction="column" spacing={2} style={{paddingRight:"40px",paddingLeft:"40px"}} >
       <Grid item style={{borderBottom:"1px solid #dbdbdb"}}>
            <SearchBarTop Title="hello" onChangeProduct={(e) => {
              var index = e.nativeEvent.target.selectedIndex;
-              setSelectedProduct(e.nativeEvent.target[index].text);
+              
+              setFilters(
+                prevState => {
+                  let obj = prevState.find(o => o.name==="appID");
+                  if(obj !== undefined) {
+                    obj.value = e.nativeEvent.target[index].text;
+                  }
+                  return [...prevState];
+                }
+              )
                 
-           } } 
+            }}
            onChangeSorting={(e) => {
             var index = e.nativeEvent.target.selectedIndex;
              setSorting(e.nativeEvent.target[index].text);
+             
                
           }}/>
         </Grid>
         <Grid container spacing={2} >
           <Grid item xs={12} sm={3}>
               <Grid container direction="column" style={{padding:"25px",borderRight:"1px solid #dbdbdb",margin:"0px" }}>
-                  <Search  onChangeSearch={(e) => setSearchbar(e.target.value)} onClickRating={(e) => setRating(e.currentTarget.dataset.id)} onChangeDate={date => setSelectedDate(date)} Datevalue={selectedDate}/>
+                  <Search  
+                  onChangeSearch={(e) =>
+                    
+                     setFilters(
+                      prevState => {
+                        let obj = prevState.find(o => o.name==="reviewUserName");
+                        if(obj !== undefined) {
+                          obj.value =e.target.value;
+                          obj.value= (obj.value).charAt(0).toUpperCase() + (obj.value).slice(1)
+                        }
+                        return [...prevState];
+                      }
+                    )
+                    } 
+                  onClickRating={(e) =>  
+                  
+                    setFilters(
+                      prevState => {
+                        let obj = prevState.find(o => o.name==="rating");
+                        if(obj !== undefined) {
+                          obj.value = e;
+                        }
+                        return [...prevState];
+                      }
+                    )
+                  } 
+                  onChangeDate={date => setSelectedDate(date)} Datevalue={selectedDate}
+                  onClickVersion={(e) =>  
+                  
+                    setFilters(
+                      prevState => {
+                        let obj = prevState.find(o => o.name==="version");
+                        if(obj !== undefined) {
+                          obj.value = e;
+                        }
+                        return [...prevState];
+                      }
+                    )}
+                    onClickCountry={(e) =>  
+                  
+                      setFilters(
+                        prevState => {
+                          let obj = prevState.find(o => o.name==="countryName");
+                          if(obj !== undefined) {
+                            obj.value = e;
+                          }
+                          return [...prevState];
+                        }
+                      )}
+
+                      countryCountArray={ratingPerCountry}
+                      filtersCountArray={ratingPerVersion}
+                      starsCountArray={ratingPerStar}
+                  />
               </Grid>
           </Grid>
           
@@ -179,30 +222,15 @@ if(SelectedProduct == '')
               
             </Grid>
             <Grid item  style={{margin:"0 auto"}}>
-               <Pagination count={Math.trunc(SortedPosts.length/postsPerPage)} onChange={handleChange} />
+               <Pagination count={Math.ceil(finalResult.length/postsPerPage)} onChange={handleChange} />
             </Grid>
           </Grid>
               
         </Grid>
       </Grid>
-    </div>
+    </Grid>
   );
 }
 
 export default App;
-
-
-/**
- *  const [page, setPage] = React.useState(1);
-  const handleChange = (event, value) => {
-    setPage(value);
-  };
-
-  return (
-    <div>
-      <Pagination count={10} page={page} onChange={handleChange} />
-    </div>
-  );
-}
- */
 
